@@ -300,6 +300,11 @@ vendor\.oplus\..*
 com\.oneplus\..*
 vendor\.oneplus\..*
 
+# infiniti camera-port: oplus-fwk boot jar OEM stub packages (class-closure, task-9 matrix)
+com\.coloros\.deepthinker
+com\.itgsa\.opensdk\.wm
+com\.oplusx\..*
+
 # QC adds
 com.qualcomm.qti
 com.quicinc.tcmiface
