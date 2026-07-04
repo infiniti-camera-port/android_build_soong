@@ -28,6 +28,8 @@ TEST_KEY_DIR = "build/make/target/product/security"
 def get_build_variant(product_config):
   if product_config["Eng"]:
     return "eng"
+  elif product_config["Debuggable"]:
+    return "userdebug"
   else:
     return "user"
 
@@ -360,13 +362,11 @@ def append_additional_system_props(args):
       enable_dalvik_lock_contention_logging = False
     else:
       # Disable debugging in userdebug builds if PRODUCT_NOT_DEBUGGABLE_IN_USERDEBUG
-      # is set.
-      # DIRTY (dev/testbench build): keep userdebug debuggable so ro.debuggable=1 and
-      # `adb root` works — both the LOS "Rooted debugging" toggle (ADBRootService.isSupported)
-      # and adbd (should_drop_privileges) gate on ro.debuggable. The
-      # PRODUCT_NOT_DEBUGGABLE_IN_USERDEBUG := (empty) override did not propagate through
-      # add_json_bool/soong config, so force it here.
-      if False and config["ProductNotDebuggableInUserdebug"]:
+      # is set. device/oneplus/infiniti sets it := (empty) so this stays False and the
+      # userdebug build keeps ro.debuggable=1 for `adb root` / the LOS Rooted-debugging
+      # toggle. The real enabler is restoring the userdebug variant in get_build_variant
+      # above; crDroid 6ede27a9 had collapsed userdebug->user, making this branch dead.
+      if config["ProductNotDebuggableInUserdebug"]:
         enable_target_debugging = False
 
     # Disallow mock locations by default for user builds
