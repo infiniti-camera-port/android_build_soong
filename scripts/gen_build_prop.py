@@ -361,7 +361,12 @@ def append_additional_system_props(args):
     else:
       # Disable debugging in userdebug builds if PRODUCT_NOT_DEBUGGABLE_IN_USERDEBUG
       # is set.
-      if config["ProductNotDebuggableInUserdebug"]:
+      # DIRTY (dev/testbench build): keep userdebug debuggable so ro.debuggable=1 and
+      # `adb root` works — both the LOS "Rooted debugging" toggle (ADBRootService.isSupported)
+      # and adbd (should_drop_privileges) gate on ro.debuggable. The
+      # PRODUCT_NOT_DEBUGGABLE_IN_USERDEBUG := (empty) override did not propagate through
+      # add_json_bool/soong config, so force it here.
+      if False and config["ProductNotDebuggableInUserdebug"]:
         enable_target_debugging = False
 
     # Disallow mock locations by default for user builds
